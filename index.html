@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Coastal Dog Walks</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 2rem;
+            background-color: #11111b; 
+            color: #cdd6f4;
+            line-height: 1.6;
+        }
+        .card {
+            background: linear-gradient(145deg, #1e1e2e, #181825);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid #313244;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        h1, h2, h3 {
+            color: #89b4fa;
+            margin-top: 0;
+            letter-spacing: 0.5px;
+        }
+        .status-good { color: #a6e3a1; font-weight: bold; text-shadow: 0 0 5px rgba(166, 227, 161, 0.3); }
+        .status-bad { color: #f38ba8; font-weight: bold; text-shadow: 0 0 5px rgba(243, 139, 168, 0.3); }
+        .status-warning { color: #f9e2af; font-weight: bold; }
+        
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            background-color: #181825;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid #313244;
+        }
+        th { background-color: #313244; color: #bac2de; text-transform: uppercase; font-size: 0.85rem; }
+        
+        .cam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .cam-card {
+            background: #181825;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #45475a;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .cam-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: #cba6f7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Standard 16:9 Container for YouTube */
+        .webcam-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #000;
+        }
+        .webcam-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* The Advanced CSS Guillotine for Cork Harbour */
+        .cork-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden; 
+            border-radius: 8px;
+            background-color: #000;
+        }
+        .cork-wrapper iframe {
+            position: absolute;
+            top: -480px; 
+            left: -25%;  
+            width: 150%; 
+            height: 1200px;
+            border: 0;
+        }
+
+        /* HTML5 Accordion Styling */
+        details {
+            background-color: #1e1e2e;
+            border: 1px solid #45475a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        summary {
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #313244;
+            outline: none;
+        }
+        details[open] summary { border-bottom: 1px solid #45475a; }
+        .details-content { padding: 15px; font-size: 0.95rem; }
+        .alert-red { border-left: 5px solid #f38ba8; }
+        .alert-yellow { border-left: 5px solid #f9e2af; }
+
+        /* Form Upgrades */
+        .form-group { margin-bottom: 1.5rem; }
+        select, input[type="range"] {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 0.5rem;
+        }
+        select {
+            background-color: #181825;
+            color: #cdd6f4;
+            border: 1px solid #89b4fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+        .radio-group { display: flex; gap: 15px; margin-top: 10px; }
+        .radio-group label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        
+        button {
+            background: linear-gradient(90deg, #89b4fa, #cba6f7);
+            color: #11111b;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(137, 180, 250, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="card">
+        <h1>🌊 Safe Coastal Dog Walks</h1>
+        <p>Checking the tides and weather to make sure the beach is safe for the dogs today.</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>📡 South Coast Live Feeds</h2>
+            <div class="cam-grid">
+                
+                <!-- Camera 1: Inchydoney Island (YouTube Autoplay) -->
+                <div class="cam-card">
+                    <h3>🔴 Inchydoney Island</h3>
+                    <div class="webcam-container">
+                        <iframe src="https://www.youtube.com/embed/AcdAeCC4QV4?autoplay=1&mute=1&controls=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Camera 2: Cork Harbour (Advanced CSS Guillotine - Unlocked) -->
+                <div class="cam-card">
+                    <h3>🔴 Cork Harbour</h3>
+                    <div class="cork-wrapper">
+                        <iframe src="https://kinsaleangling.com/gallery/videos/video/cork-harbour-weather-cam-01" scrolling="no"></iframe>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>⚠️ Environmental Hazards (Click to expand)</h2>
+            
+            <details class="alert-red">
+                <summary><span class="status-bad">Hazard: Exposed Mudflats</span></summary>
+                <div class="details-content">
+                    The current low tide has exposed deep mud near the harbor. Keep the dogs on a short lead so they don't get stuck.
+                </div>
+            </details>
+            
+            <details class="alert-yellow">
+                <summary><span class="status-warning">Hazard: Debris</span></summary>
+                <div class="details-content">
+                    Recent high tides washed up seaweed and shells. Keep an eye out ahead of the dogs.
+                </div>
+            </details>
+        </section>
+
+        <section class="card">
+            <h2>Today's Best Times to Walk</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Tide Level</th>
+                        <th>Temp</th>
+                        <th>Run Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>14:00</td>
+                        <td title="Water is going out, leaving hard sand.">Going Out</td>
+                        <td>16°C</td>
+                        <td class="status-good">Optimal 🟢</td>
+                    </tr>
+                    <tr>
+                        <td>18:30 (Sunset)</td>
+                        <td title="Water is rising, less space on the beach.">Coming In</td>
+                        <td>12°C</td>
+                        <td class="status-good">Good 🟢</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Settings</h2>
+            <form action="#" method="GET">
+                
+                <div class="form-group">
+                    <label for="location">Target Coastline:</label>
+                    <select id="location" name="location">
+                        <option value="inchydoney">Inchydoney Island</option>
+                        <option value="cork-harbour">Cork Harbour</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Dogs:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="dog" value="husky" checked> Husky</label>
+                        <label><input type="radio" name="dog" value="wolfdog"> Wolf-dog</label>
+                        <label><input type="radio" name="dog" value="pack"> Both</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="max-temp">Max Temperature: <span id="temp-display" style="color:#89b4fa; font-weight:bold;">16°C</span></label><br>
+                    <input type="range" id="max-temp" name="max-temp" min="10" max="25" value="16" oninput="document.getElementById('temp-display').innerText = this.value + '°C'">
+                </div>
+                
+                <button type="submit">Update Times</button>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
