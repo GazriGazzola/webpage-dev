@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coastal Dog-Run Algorithm</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 2rem;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            line-height: 1.6;
+        }
+        .card {
+            background: #313244;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #45475a;
+        }
+        h1, h2, h3 {
+            color: #89b4fa;
+            margin-top: 0;
+        }
+        .status-good {
+            color: #a6e3a1;
+            font-weight: bold;
+        }
+        .status-bad {
+            color: #f38ba8;
+            font-weight: bold;
+        }
+        .status-warning {
+            color: #f9e2af;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid #45475a;
+        }
+        th {
+            color: #bac2de;
+        }
+        .cam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .cam-card {
+            background: #181825;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #45475a;
+        }
+        .cam-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #cba6f7;
+        }
+        .webcam-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+        .webcam-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .fallback-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #181825;
+        }
+        .alert-box {
+            background-color: #45475a;
+            border-left: 5px solid #f38ba8;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .alert-box h3 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        .alert-box p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        select, input[type="number"] {
+            background-color: #181825;
+            color: #cdd6f4;
+            border: 1px solid #45475a;
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 0.5rem;
+        }
+        button, .btn-link {
+            background-color: #89b4fa;
+            color: #11111b;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        button:hover, .btn-link:hover {
+            background-color: #b4befe;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="card">
+        <h1>🌊 The Coastal Dog-Run Algorithm</h1>
+        <p>Because dragging a heavy-coated dog to the beach at high tide under the blazing sun is a rookie mistake.</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>📡 South Coast Live Feeds</h2>
+            <p>Live visual confirmation of tide states and crowd levels.</p>
+            
+            <div class="cam-grid">
+                <!-- Camera 1: Youghal Beach (Click-Out Fallback) -->
+                <div class="cam-card">
+                    <h3>Youghal Beach</h3>
+                    <div class="webcam-container">
+                        <div class="fallback-content">
+                            <div>
+                                <p style="color: #a6adc8; margin-bottom: 10px;">Embed blocked by tunnel security</p>
+                                <a href="https://www.youtube.com/watch?v=AcdAeCC4QV4" target="_blank" class="btn-link">Open Live Feed ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Camera 2: Cork Harbour (Click-Out) -->
+                <div class="cam-card">
+                    <h3>Cork Harbour</h3>
+                    <div class="webcam-container">
+                        <div class="fallback-content">
+                            <div>
+                                <p style="color: #a6adc8; margin-bottom: 10px;">Direct stream access restricted</p>
+                                <a href="https://kinsaleangling.com/gallery/videos/video/cork-harbour-weather-cam-01" target="_blank" class="btn-link">Open Live Feed ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Current Local Conditions</h2>
+            <ul>
+                <li><strong>Tide Status:</strong> <span class="status-bad">Low (Exposed)</span></li>
+                <li><strong>Temperature:</strong> 14°C - Ideal running conditions</li>
+                <li><strong>Wind:</strong> 15 km/h NW</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>⚠️ Active Coastal Warnings</h2>
+            <div class="alert-box">
+                <h3 class="status-bad">Mudflat Hazard</h3>
+                <p>The current low tide has exposed deep mudflats. Keep dogs on a short lead to prevent them from getting stuck.</p>
+            </div>
+            <div class="alert-box" style="border-left-color: #f9e2af;">
+                <h3 class="status-warning">Debris & Wildlife</h3>
+                <p>Recent high tides have washed up dried seaweed and jellyfish along the strand. Scan the shoreline ahead.</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Today's Optimal Run Windows</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Tide Level</th>
+                        <th>Temp</th>
+                        <th>Run Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>14:00</td>
+                        <td>Mid (Outgoing)</td>
+                        <td>16°C</td>
+                        <td class="status-good">Optimal 🟢</td>
+                    </tr>
+                    <tr>
+                        <td>18:30 (Sunset)</td>
+                        <td>Mid (Incoming)</td>
+                        <td>12°C</td>
+                        <td class="status-good">Prime Time 🟢</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Algorithm Parameters</h2>
+            <form action="#" method="GET">
+                <label for="location">Select Beach / Coastline:</label><br>
+                <select id="location" name="location">
+                    <option value="youghal">Youghal Beach</option>
+                    <option value="cork-harbour">Cork Harbour</option>
+                </select>
+                
+                <br><br>
+                
+                <label for="max-temp">Max Dog Temp Tolerance (°C):</label><br>
+                <input type="number" id="max-temp" name="max-temp" value="18" max="25">
+                
+                <br>
+                <button type="submit">Recalculate Run Windows</button>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
