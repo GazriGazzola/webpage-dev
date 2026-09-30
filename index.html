@@ -294,17 +294,15 @@
         // 1. WEATHER API LOGIC
         // ---------------------------------------------------------
         
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // PASTE YOUR NEW COBH WEATHER LAMBDA FUNCTION URL HERE:
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const WEATHER_API_ENDPOINT = 'YOUR_WEATHER_LAMBDA_URL_HERE';
+        // YOUR LIVE COBH WEATHER LAMBDA FUNCTION URL:
+        const WEATHER_API_ENDPOINT = 'https://wmzgcoz42mebq7jyrkgubsicdu0cnaso.lambda-url.eu-north-1.on.aws/';
         
         async function fetchWeather() {
             const statsDiv = document.getElementById('weather-stats');
             const warningsContainer = document.getElementById('weather-warnings-container');
 
             if (WEATHER_API_ENDPOINT === 'YOUR_WEATHER_LAMBDA_URL_HERE') {
-                statsDiv.innerHTML = "❌ You forgot to paste your AWS URL into the code, Gary.";
+                statsDiv.innerHTML = "❌ You forgot to paste your AWS URL into the code.";
                 statsDiv.style.color = "#f38ba8";
                 return;
             }
