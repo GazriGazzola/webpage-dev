@@ -65,7 +65,7 @@
             gap: 8px;
         }
         
-        /* Standard 16:9 Container */
+        /* Standard Responsive 16:9 Container */
         .webcam-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -83,25 +83,7 @@
             border: 0;
         }
 
-        /* The Advanced CSS Guillotine for Cork Harbour (Desktop) */
-        .cork-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; 
-            height: 0;
-            overflow: hidden; 
-            border-radius: 8px;
-            background-color: #000;
-        }
-        .cork-wrapper iframe {
-            position: absolute;
-            top: -480px; 
-            left: -25%;  
-            width: 150%; 
-            height: 1200px;
-            border: 0;
-        }
-
-        /* HTML5 Accordion Styling */
+        /* Accordion Styling */
         details {
             background-color: #1e1e2e;
             border: 1px solid #45475a;
@@ -124,23 +106,19 @@
         .alert-yellow { border-left: 5px solid #f9e2af; }
         .alert-green { border-left: 5px solid #a6e3a1; }
 
-        /* Form Upgrades */
+        /* Form Controls */
         .form-group { margin-bottom: 1.5rem; }
-        select, input[type="range"] {
-            width: 100%;
-            max-width: 400px;
-            margin-top: 0.5rem;
-        }
-        select {
+        #nameInput {
             background-color: #181825;
             color: #cdd6f4;
             border: 1px solid #89b4fa;
             padding: 0.75rem;
             border-radius: 6px;
+            width: 100%;
+            max-width: 380px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
         }
-        .radio-group { display: flex; gap: 15px; margin-top: 10px; }
-        .radio-group label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        
         button {
             background: linear-gradient(90deg, #89b4fa, #cba6f7);
             color: #11111b;
@@ -157,18 +135,6 @@
             box-shadow: 0 4px 12px rgba(137, 180, 250, 0.4);
         }
 
-        /* Serverless API Form Styles */
-        #nameInput {
-            background-color: #181825;
-            color: #cdd6f4;
-            border: 1px solid #89b4fa;
-            padding: 0.75rem;
-            border-radius: 6px;
-            width: 100%;
-            max-width: 380px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
         .response {
             margin-top: 20px;
             padding: 15px;
@@ -198,26 +164,9 @@
             display: block;
         }
 
-        /* Mobile Responsiveness for Cameras */
         @media (max-width: 768px) {
-            .cam-grid {
-                grid-template-columns: 1fr; 
-            }
-            .cork-wrapper iframe {
-                top: -550px; 
-                left: -15%;
-                width: 130%;
-                height: 1000px; 
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cork-wrapper iframe {
-                top: -500px; 
-                left: -10%;
-                width: 120%;
-                height: 700px;
-            }
+            body { margin: 1rem; }
+            .cam-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -241,29 +190,28 @@
                     </div>
                 </div>
 
-                <!-- Camera 2: Cork Harbour (Advanced CSS Guillotine) -->
+                <!-- Camera 2: Cork Harbour (Direct Player Stream) -->
                 <div class="cam-card">
                     <h3>🔴 Cork Harbour</h3>
-                    <div class="cork-wrapper">
-                        <iframe src="https://kinsaleangling.com/gallery/videos/video/cork-harbour-weather-cam-01" scrolling="no"></iframe>
+                    <div class="webcam-container">
+                        <iframe src="https://kinsaleangling.com/index.php?option=com_allvideoshare&view=player&id=32&format=raw" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- DYNAMIC WEATHER SECTION -->
+        <!-- Dynamic Weather Section -->
         <section class="card">
             <h2>⚠️ Live Environmental Conditions</h2>
             <div id="weather-stats" style="margin-bottom: 15px; font-weight: bold; color: #89b4fa;">
                 Fetching live conditions from AWS...
             </div>
             
-            <div id="weather-warnings-container">
-                <!-- Javascript will inject the Open-Meteo warnings here -->
-            </div>
+            <div id="weather-warnings-container"></div>
         </section>
 
+        <!-- Walking Windows -->
         <section class="card">
             <h2>Today's Best Times to Walk</h2>
             <table>
@@ -292,7 +240,7 @@
             </table>
         </section>
 
-        <!-- OLD AWS SERVERLESS GREETING -->
+        <!-- AWS Greeting API -->
         <section class="card">
             <h2>☁️ AWS Greeting API</h2>
             <form id="greetingForm">
@@ -310,37 +258,24 @@
         
     </main>
 
-    <!-- API Logic -->
     <script>
         // ---------------------------------------------------------
         // 1. WEATHER API LOGIC
         // ---------------------------------------------------------
-        
-        // YOUR LIVE COBH WEATHER LAMBDA FUNCTION URL:
         const WEATHER_API_ENDPOINT = 'https://wmzgcoz42mebq7jyrkgubsicdu0cnaso.lambda-url.eu-north-1.on.aws/';
         
         async function fetchWeather() {
             const statsDiv = document.getElementById('weather-stats');
             const warningsContainer = document.getElementById('weather-warnings-container');
 
-            if (WEATHER_API_ENDPOINT === 'YOUR_WEATHER_LAMBDA_URL_HERE') {
-                statsDiv.innerHTML = "❌ You forgot to paste your AWS URL into the code.";
-                statsDiv.style.color = "#f38ba8";
-                return;
-            }
-
             try {
                 const response = await fetch(WEATHER_API_ENDPOINT);
                 const data = await response.json();
 
-                // Update the stats header
                 statsDiv.innerHTML = `🌡️ Temp: ${data.temperature} | 💨 Wind: ${data.wind_speed}`;
                 statsDiv.style.color = "#a6e3a1";
-
-                // Clear out the loading text
                 warningsContainer.innerHTML = '';
 
-                // Loop through the warnings array and build HTML for each one
                 data.warnings.forEach(warning => {
                     let alertClass = "alert-yellow";
                     let statusClass = "status-warning";
@@ -353,10 +288,9 @@
                         statusClass = "status-good";
                     }
 
-                    // Create the elements
                     const details = document.createElement('details');
                     details.className = alertClass;
-                    details.open = true; // Automatically open the box
+                    details.open = true;
 
                     const summary = document.createElement('summary');
                     summary.innerHTML = `<span class="${statusClass}">${warning.title}</span>`;
@@ -365,7 +299,6 @@
                     content.className = "details-content";
                     content.textContent = warning.text;
 
-                    // Assemble the pieces and shove them onto the page
                     details.appendChild(summary);
                     details.appendChild(content);
                     warningsContainer.appendChild(details);
@@ -373,14 +306,12 @@
                 
             } catch (error) {
                 console.error("Weather fetch error:", error);
-                statsDiv.innerHTML = "❌ Failed to load live weather data. Is the Lambda CORS set up properly?";
+                statsDiv.innerHTML = "❌ Failed to load live weather data.";
                 statsDiv.style.color = "#f38ba8";
             }
         }
 
-        // Run the weather fetch instantly when the page loads
         fetchWeather();
-
 
         // ---------------------------------------------------------
         // 2. GREETING API LOGIC
@@ -394,7 +325,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = nameInput.value.trim();
-            
             if (!name) return;
             
             loadingDiv.classList.add('show');
