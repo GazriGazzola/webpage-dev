@@ -118,8 +118,11 @@
         }
         details[open] summary { border-bottom: 1px solid #45475a; }
         .details-content { padding: 15px; font-size: 0.95rem; }
+        
+        /* Dynamic Alert Colors */
         .alert-red { border-left: 5px solid #f38ba8; }
         .alert-yellow { border-left: 5px solid #f9e2af; }
+        .alert-green { border-left: 5px solid #a6e3a1; }
 
         /* Form Upgrades */
         .form-group { margin-bottom: 1.5rem; }
@@ -200,7 +203,7 @@
 
     <header class="card">
         <h1>🌊 Safe Coastal Dog Walks</h1>
-        <p>Checking the tides and weather to make sure the beach is safe for the dogs today.</p>
+        <p>Checking the tides and weather to make sure the beach is safe for the pack today.</p>
     </header>
 
     <main>
@@ -227,22 +230,16 @@
             </div>
         </section>
 
+        <!-- DYNAMIC WEATHER SECTION -->
         <section class="card">
-            <h2>⚠️ Environmental Hazards (Click to expand)</h2>
+            <h2>⚠️ Live Environmental Conditions</h2>
+            <div id="weather-stats" style="margin-bottom: 15px; font-weight: bold; color: #89b4fa;">
+                Fetching live conditions from AWS...
+            </div>
             
-            <details class="alert-red">
-                <summary><span class="status-bad">Hazard: Exposed Mudflats</span></summary>
-                <div class="details-content">
-                    The current low tide has exposed deep mud near the harbor. Keep the dogs on a short lead so they don't get stuck.
-                </div>
-            </details>
-            
-            <details class="alert-yellow">
-                <summary><span class="status-warning">Hazard: Debris</span></summary>
-                <div class="details-content">
-                    Recent high tides washed up seaweed and shells. Keep an eye out ahead of the dogs.
-                </div>
-            </details>
+            <div id="weather-warnings-container">
+                <!-- Javascript will inject the Open-Meteo warnings here -->
+            </div>
         </section>
 
         <section class="card">
@@ -273,40 +270,9 @@
             </table>
         </section>
 
+        <!-- OLD AWS SERVERLESS GREETING -->
         <section class="card">
-            <h2>Settings</h2>
-            <form action="#" method="GET">
-                
-                <div class="form-group">
-                    <label for="location">Target Coastline:</label>
-                    <select id="location" name="location">
-                        <option value="cobh">Cobh Harbour</option>
-                        <option value="cork-harbour">Cork Harbour</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Select Dogs:</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="dog" value="husky" checked> Husky</label>
-                        <label><input type="radio" name="dog" value="wolfdog"> Wolf-dog</label>
-                        <label><input type="radio" name="dog" value="pack"> Both</label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="max-temp">Max Temperature: <span id="temp-display" style="color:#89b4fa; font-weight:bold;">16°C</span></label><br>
-                    <input type="range" id="max-temp" name="max-temp" min="10" max="25" value="16" oninput="document.getElementById('temp-display').innerText = this.value + '°C'">
-                </div>
-                
-                <button type="submit">Update Times</button>
-            </form>
-        </section>
-
-        <!-- NEW AWS SERVERLESS INTEGRATION -->
-        <section class="card">
-            <h2>☁️ AWS Serverless API Test</h2>
-            <p style="margin-bottom: 15px;">Send a request to your live AWS Lambda backend:</p>
+            <h2>☁️ AWS Greeting API</h2>
             <form id="greetingForm">
                 <input 
                     type="text" 
@@ -316,11 +282,7 @@
                 ><br>
                 <button type="submit">Send to Cloud</button>
             </form>
-            
-            <div class="loading" id="loading">
-                Connecting to AWS Lambda...
-            </div>
-            
+            <div class="loading" id="loading">Connecting to AWS Lambda...</div>
             <div class="response" id="response"></div>
         </section>
         
@@ -328,9 +290,82 @@
 
     <!-- API Logic -->
     <script>
-        // Your live API Gateway URL pointing to the /greet resource
-        const API_ENDPOINT = 'https://26f6iuovpj.execute-api.eu-north-1.amazonaws.com/prod/greet';
+        // ---------------------------------------------------------
+        // 1. WEATHER API LOGIC
+        // ---------------------------------------------------------
         
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // PASTE YOUR NEW COBH WEATHER LAMBDA FUNCTION URL HERE:
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const WEATHER_API_ENDPOINT = 'YOUR_WEATHER_LAMBDA_URL_HERE';
+        
+        async function fetchWeather() {
+            const statsDiv = document.getElementById('weather-stats');
+            const warningsContainer = document.getElementById('weather-warnings-container');
+
+            if (WEATHER_API_ENDPOINT === 'YOUR_WEATHER_LAMBDA_URL_HERE') {
+                statsDiv.innerHTML = "❌ You forgot to paste your AWS URL into the code, Gary.";
+                statsDiv.style.color = "#f38ba8";
+                return;
+            }
+
+            try {
+                const response = await fetch(WEATHER_API_ENDPOINT);
+                const data = await response.json();
+
+                // Update the stats header
+                statsDiv.innerHTML = `🌡️ Temp: ${data.temperature} | 💨 Wind: ${data.wind_speed}`;
+                statsDiv.style.color = "#a6e3a1";
+
+                // Clear out the loading text
+                warningsContainer.innerHTML = '';
+
+                // Loop through the warnings array and build HTML for each one
+                data.warnings.forEach(warning => {
+                    let alertClass = "alert-yellow";
+                    let statusClass = "status-warning";
+                    
+                    if (warning.type === "bad") {
+                        alertClass = "alert-red";
+                        statusClass = "status-bad";
+                    } else if (warning.type === "good") {
+                        alertClass = "alert-green";
+                        statusClass = "status-good";
+                    }
+
+                    // Create the elements
+                    const details = document.createElement('details');
+                    details.className = alertClass;
+                    details.open = true; // Automatically open the box
+
+                    const summary = document.createElement('summary');
+                    summary.innerHTML = `<span class="${statusClass}">${warning.title}</span>`;
+
+                    const content = document.createElement('div');
+                    content.className = "details-content";
+                    content.textContent = warning.text;
+
+                    // Assemble the pieces and shove them onto the page
+                    details.appendChild(summary);
+                    details.appendChild(content);
+                    warningsContainer.appendChild(details);
+                });
+                
+            } catch (error) {
+                console.error("Weather fetch error:", error);
+                statsDiv.innerHTML = "❌ Failed to load live weather data. Is the Lambda CORS set up properly?";
+                statsDiv.style.color = "#f38ba8";
+            }
+        }
+
+        // Run the weather fetch instantly when the page loads
+        fetchWeather();
+
+
+        // ---------------------------------------------------------
+        // 2. GREETING API LOGIC
+        // ---------------------------------------------------------
+        const GREETING_API_ENDPOINT = 'https://26f6iuovpj.execute-api.eu-north-1.amazonaws.com/prod/greet';
         const form = document.getElementById('greetingForm');
         const nameInput = document.getElementById('nameInput');
         const responseDiv = document.getElementById('response');
@@ -338,47 +373,37 @@
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const name = nameInput.value.trim();
             
-            if (!name) {
-                showResponse('Please enter your name', 'error');
-                return;
-            }
+            if (!name) return;
             
-            // Show loading state
             loadingDiv.classList.add('show');
             responseDiv.classList.remove('success', 'error');
             
             try {
-                const response = await fetch(API_ENDPOINT, {
+                const response = await fetch(GREETING_API_ENDPOINT, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showResponse(data.message, 'success');
-                    nameInput.value = ''; // Clear input
+                    responseDiv.textContent = data.message;
+                    responseDiv.className = 'response success';
+                    nameInput.value = ''; 
                 } else {
-                    showResponse(data.error || 'An error occurred', 'error');
+                    responseDiv.textContent = data.error || 'An error occurred';
+                    responseDiv.className = 'response error';
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showResponse('Failed to connect to the server. Check the console.', 'error');
+                responseDiv.textContent = 'Failed to connect to the server. Check the console.';
+                responseDiv.className = 'response error';
             } finally {
                 loadingDiv.classList.remove('show');
             }
         });
-        
-        function showResponse(message, type) {
-            responseDiv.textContent = message;
-            responseDiv.className = `response ${type}`;
-        }
     </script>
 </body>
 </html>
