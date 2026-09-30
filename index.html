@@ -204,8 +204,11 @@
         <!-- Dynamic Weather Section -->
         <section class="card">
             <h2>⚠️ Live Environmental Conditions</h2>
-            <div id="weather-stats" style="margin-bottom: 15px; font-weight: bold; color: #89b4fa;">
+            <div id="weather-stats" style="margin-bottom: 10px; font-weight: bold; color: #89b4fa;">
                 Fetching live conditions from AWS...
+            </div>
+            <div id="sun-stats" style="margin-bottom: 15px; font-size: 0.95rem; color: #bac2de;">
+                <!-- Sun times injected here -->
             </div>
             
             <div id="weather-warnings-container"></div>
@@ -233,7 +236,7 @@
 
         <!-- AWS Greeting API -->
         <section class="card">
-            <h2>☁️️ AWS Greeting API</h2>
+            <h2>☁ AWS Greeting API</h2>
             <form id="greetingForm">
                 <input 
                     type="text" 
@@ -257,6 +260,7 @@
         
         async function fetchWeatherData() {
             const statsDiv = document.getElementById('weather-stats');
+            const sunDiv = document.getElementById('sun-stats');
             const warningsContainer = document.getElementById('weather-warnings-container');
             const tideBody = document.getElementById('tide-table-body');
 
@@ -267,6 +271,10 @@
                 // Render weather stats
                 statsDiv.innerHTML = `🌡️ Temp: ${data.temperature} | 💨 Wind: ${data.wind_speed}`;
                 statsDiv.style.color = "#a6e3a1";
+
+                // Render sun stats
+                sunDiv.innerHTML = `🌅 Sunrise: ${data.sunrise} | 🌇 Sunset: ${data.sunset}`;
+
                 warningsContainer.innerHTML = '';
 
                 // Render warnings
