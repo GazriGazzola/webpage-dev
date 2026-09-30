@@ -211,30 +211,21 @@
             <div id="weather-warnings-container"></div>
         </section>
 
-        <!-- Walking Windows -->
+        <!-- Walking Windows (Dynamic Tides) -->
         <section class="card">
             <h2>Today's Best Times to Walk</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Time</th>
-                        <th>Tide Level</th>
-                        <th>Temp</th>
-                        <th>Run Status</th>
+                        <th>Time (Irish Time)</th>
+                        <th>Tide Phase</th>
+                        <th>Current Temp</th>
+                        <th>Recommendation</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tide-table-body">
                     <tr>
-                        <td>14:00</td>
-                        <td title="Water is going out, leaving hard sand.">Going Out</td>
-                        <td>16°C</td>
-                        <td class="status-good">Optimal 🟢</td>
-                    </tr>
-                    <tr>
-                        <td>18:30 (Sunset)</td>
-                        <td title="Water is rising, less space on the beach.">Coming In</td>
-                        <td>12°C</td>
-                        <td class="status-good">Good 🟢</td>
+                        <td colspan="4" style="text-align: center; color: #f9e2af;">Synchronizing tide data from AWS...</td>
                     </tr>
                 </tbody>
             </table>
@@ -242,7 +233,7 @@
 
         <!-- AWS Greeting API -->
         <section class="card">
-            <h2>☁️ AWS Greeting API</h2>
+            <h2>☁️️ AWS Greeting API</h2>
             <form id="greetingForm">
                 <input 
                     type="text" 
@@ -260,22 +251,25 @@
 
     <script>
         // ---------------------------------------------------------
-        // 1. WEATHER API LOGIC
+        // 1. WEATHER & TIDE API LOGIC
         // ---------------------------------------------------------
         const WEATHER_API_ENDPOINT = 'https://wmzgcoz42mebq7jyrkgubsicdu0cnaso.lambda-url.eu-north-1.on.aws/';
         
-        async function fetchWeather() {
+        async function fetchWeatherData() {
             const statsDiv = document.getElementById('weather-stats');
             const warningsContainer = document.getElementById('weather-warnings-container');
+            const tideBody = document.getElementById('tide-table-body');
 
             try {
                 const response = await fetch(WEATHER_API_ENDPOINT);
                 const data = await response.json();
 
+                // Render weather stats
                 statsDiv.innerHTML = `🌡️ Temp: ${data.temperature} | 💨 Wind: ${data.wind_speed}`;
                 statsDiv.style.color = "#a6e3a1";
                 warningsContainer.innerHTML = '';
 
+                // Render warnings
                 data.warnings.forEach(warning => {
                     let alertClass = "alert-yellow";
                     let statusClass = "status-warning";
@@ -303,15 +297,28 @@
                     details.appendChild(content);
                     warningsContainer.appendChild(details);
                 });
+
+                // Render dynamic tides table
+                tideBody.innerHTML = '';
+                data.tides.forEach(tide => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${tide.time}</td>
+                        <td>${tide.level}</td>
+                        <td>${tide.temp}</td>
+                        <td class="${tide.status_class}">${tide.status}</td>
+                    `;
+                    tideBody.appendChild(row);
+                });
                 
             } catch (error) {
-                console.error("Weather fetch error:", error);
-                statsDiv.innerHTML = "❌ Failed to load live weather data.";
+                console.error("Data fetch error:", error);
+                statsDiv.innerHTML = "❌ Failed to load live environmental data from AWS.";
                 statsDiv.style.color = "#f38ba8";
             }
         }
 
-        fetchWeather();
+        fetchWeatherData();
 
         // ---------------------------------------------------------
         // 2. GREETING API LOGIC
@@ -348,7 +355,7 @@
                     responseDiv.className = 'response error';
                 }
             } catch (error) {
-                responseDiv.textContent = 'Failed to connect to the server. Check the console.';
+                responseDiv.textContent = 'Failed to connect to the server.';
                 responseDiv.className = 'response error';
             } finally {
                 loadingDiv.classList.remove('show');
