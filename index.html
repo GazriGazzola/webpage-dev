@@ -83,7 +83,7 @@
             border: 0;
         }
 
-        /* The Advanced CSS Guillotine for Cork Harbour */
+        /* The Advanced CSS Guillotine for Cork Harbour (Desktop) */
         .cork-wrapper {
             position: relative;
             padding-bottom: 56.25%; 
@@ -197,25 +197,26 @@
         .loading.show {
             display: block;
         }
+
         /* Mobile Responsiveness for Cameras */
         @media (max-width: 768px) {
             .cam-grid {
-                grid-template-columns: 1fr; /* Forces cameras to stack vertically */
+                grid-template-columns: 1fr; 
             }
             .cork-wrapper iframe {
-                top: -240px; 
+                top: -550px; 
                 left: -15%;
                 width: 130%;
-                height: 600px; 
+                height: 1000px; 
             }
         }
 
         @media (max-width: 480px) {
             .cork-wrapper iframe {
-                top: -150px;
+                top: -380px; 
                 left: -10%;
                 width: 120%;
-                height: 400px;
+                height: 700px;
             }
         }
     </style>
@@ -298,7 +299,7 @@
                 <input 
                     type="text" 
                     id="nameInput" 
-                    placeholder="Enter a name (e.g. Gary)" 
+                    placeholder="Enter a name" 
                     required
                 ><br>
                 <button type="submit">Send to Cloud</button>
